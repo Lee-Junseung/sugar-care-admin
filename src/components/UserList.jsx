@@ -4,6 +4,18 @@ import { Search, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Mail, Heart,
 
 const ITEMS_PER_PAGE = 8;
 
+// [데모용 Mock 데이터] 실제 API 원본 응답 형태와 동일한 구조로 작성
+const MOCK_USERS_RAW = [
+  { name: '김민준', age: 34, gender: '남', height: 175, weight: 78, health_goal: '체중 감량', email: 'minjun.kim@example.com', birth: '1990-04-12', allergy_name: ['우유', '땅콩'], preferred_food: '현미밥, 닭가슴살, 샐러드', disprefferd_food: '튀김', diabetes_type: '2형', activity: '주 3회 이상 운동', bs_goal: 130 },
+  { name: '이서연', age: 28, gender: '여', height: 162, weight: 55, health_goal: '혈당 관리', email: 'seoyeon.lee@example.com', birth: '1996-09-02', allergy_name: ['갑각류'], preferred_food: '두부, 나물', disprefferd_food: '', diabetes_type: '1형', activity: '거의 활동하지 않음', bs_goal: 110 },
+  { name: '박도윤', age: 45, gender: '남', height: 170, weight: 82, health_goal: '식단 관리', email: 'dowoon.park@example.com', birth: '1979-01-20', allergy_name: [], preferred_food: '잡곡밥, 된장국', disprefferd_food: '단 음식', diabetes_type: '2형', activity: '가벼운 산책', bs_goal: 125 },
+  { name: '최지우', age: 31, gender: '여', height: 165, weight: 58, health_goal: '임신 중 혈당 관리', email: 'jiwoo.choi@example.com', birth: '1993-11-05', allergy_name: ['계란'], preferred_food: '고구마, 그릭요거트', disprefferd_food: '카페인 음료', diabetes_type: '임신성', activity: '가벼운 산책', bs_goal: 120 },
+  { name: '정하은', age: 52, gender: '여', height: 158, weight: 63, health_goal: '전단계 관리', email: 'haeun.jung@example.com', birth: '1972-06-18', allergy_name: [], preferred_food: '채소볶음', disprefferd_food: '가공식품', diabetes_type: '전단계', activity: '주 1-2회 운동', bs_goal: 100 },
+  { name: '한지호', age: 39, gender: '남', height: 178, weight: 88, health_goal: '체중 감량', email: 'jiho.han@example.com', birth: '1985-03-30', allergy_name: ['밀', '콩'], preferred_food: '닭가슴살, 브로콜리', disprefferd_food: '밀가루 음식', diabetes_type: '2형', activity: '주 3회 이상 운동', bs_goal: 128 },
+  { name: '오수빈', age: 24, gender: '여', height: 160, weight: 50, health_goal: '혈당 관리', email: 'subin.oh@example.com', birth: '2000-12-08', allergy_name: [], preferred_food: '연어, 아보카도', disprefferd_food: '', diabetes_type: '1형', activity: '매일 운동', bs_goal: 108 },
+  { name: '강태윤', age: 60, gender: '남', height: 168, weight: 75, health_goal: '전단계 관리', email: 'taeyoon.kang@example.com', birth: '1964-07-14', allergy_name: ['생선'], preferred_food: '나물, 두부', disprefferd_food: '해산물', diabetes_type: '전단계', activity: '가벼운 산책', bs_goal: 105 },
+];
+
 export function UserList() {
   // 상태 관리 (데이터, 로딩, 검색, 페이지네이션)
   const [users, setUsers] = useState([]);
@@ -16,7 +28,8 @@ export function UserList() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('/management/users/list');
+        // [데모용] 실제 API 대신 mock 데이터 사용
+        const response = { data: { success: true, data: MOCK_USERS_RAW } };
 
         if (response.data.success) {
           // API 데이터를 화면에 맞는 형태로 변환(Mapping)

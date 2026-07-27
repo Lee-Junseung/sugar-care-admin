@@ -40,10 +40,29 @@ export function PopularFoodStats() {
           prediabetes: createEmptyData(),
         };
 
-        const [historyRes, favoriteRes] = await Promise.all([
-          axios.get('/management/foods/history'),
-          axios.get('/management/foods/favorite')
-        ]);
+        // [데모용] 실제 API 대신 mock 데이터 사용 (원본 API 응답 형태와 동일한 구조)
+        const historyRes = {
+          data: {
+            success: true,
+            data: [
+              { diabetes_type: '1형', food_record: 1820, record_top_1: ['현미밥', 210], record_top_2: ['닭가슴살', 180], record_top_3: ['샐러드', 150], record_top_4: ['두부', 120], record_top_5: ['고구마', 95] },
+              { diabetes_type: '2형', food_record: 3420, record_top_1: ['잡곡밥', 380], record_top_2: ['된장국', 290], record_top_3: ['나물', 240], record_top_4: ['생선구이', 200], record_top_5: ['김치', 175] },
+              { diabetes_type: '임신성', food_record: 960, record_top_1: ['그릭요거트', 110], record_top_2: ['고구마', 95], record_top_3: ['아보카도', 80], record_top_4: ['현미밥', 70], record_top_5: ['닭가슴살', 60] },
+              { diabetes_type: '전단계', food_record: 1500, record_top_1: ['채소볶음', 160], record_top_2: ['두부', 140], record_top_3: ['잡곡밥', 130], record_top_4: ['나물', 110], record_top_5: ['된장국', 90] },
+            ]
+          }
+        };
+        const favoriteRes = {
+          data: {
+            success: true,
+            data: [
+              { diabetesType: '1형', favoriteTop1: ['연어 샐러드', 85], favoriteTop2: ['닭가슴살 볼', 70], favoriteTop3: ['두부조림', 55] },
+              { diabetesType: '2형', favoriteTop1: ['잡곡 비빔밥', 130], favoriteTop2: ['된장찌개', 110], favoriteTop3: ['생선구이', 90] },
+              { diabetesType: '임신성', favoriteTop1: ['그릭요거트볼', 60], favoriteTop2: ['고구마 샐러드', 45], favoriteTop3: ['아보카도 토스트', 35] },
+              { diabetesType: '전단계', favoriteTop1: ['채소볶음밥', 75], favoriteTop2: ['두부스테이크', 62], favoriteTop3: ['나물비빔밥', 50] },
+            ]
+          }
+        };
         
         // 기록 내역 처리
         if (historyRes.data.success && Array.isArray(historyRes.data.data)) {

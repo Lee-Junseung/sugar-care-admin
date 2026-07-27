@@ -42,7 +42,14 @@ export function BloodSugarStats() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/management/blood_sugar');
+        // [데모용] 실제 API 대신 mock 데이터 사용 (원본 API 응답 형태와 동일한 구조)
+        const MOCK_BLOOD_SUGAR_RAW = [
+          { diabetes_type: '1형', mon_bs_Mean: 142, tue_bs_Mean: 138, wen_bs_Mean: 145, thu_bsMean: 140, fri_bsMean: 137, sat_bsMean: 143, sun_bs_Mean: 139, high_bs: 12, low_bs: 4, count_per_month: 210 },
+          { diabetes_type: '2형', mon_bs_Mean: 158, tue_bs_Mean: 162, wen_bs_Mean: 155, thu_bsMean: 160, fri_bsMean: 165, sat_bsMean: 159, sun_bs_Mean: 157, high_bs: 64, low_bs: 3, count_per_month: 340 },
+          { diabetes_type: '임신성', mon_bs_Mean: 152, tue_bs_Mean: 149, wen_bs_Mean: 156, thu_bsMean: 153, fri_bsMean: 158, sat_bsMean: 151, sun_bs_Mean: 154, high_bs: 8, low_bs: 1, count_per_month: 95 },
+          { diabetes_type: '전단계', mon_bs_Mean: 135, tue_bs_Mean: 132, wen_bs_Mean: 138, thu_bsMean: 134, fri_bsMean: 136, sat_bsMean: 133, sun_bs_Mean: 137, high_bs: 5, low_bs: 0, count_per_month: 150 },
+        ];
+        const response = { data: { success: true, data: MOCK_BLOOD_SUGAR_RAW } };
         
         if (response.data.success && Array.isArray(response.data.data)) {
            const processedData = {};

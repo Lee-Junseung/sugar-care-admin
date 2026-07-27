@@ -32,7 +32,8 @@ export function ServiceStats() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/management/users/service_stats');
+        // [데모용] 실제 API 대신 mock 데이터 사용
+        const response = { data: { success: true, data: { type1: 128, type2: 342, gestational: 46, before: 189 } } };
         if (response.data.success) {
           setStatsData(response.data.data);
         }

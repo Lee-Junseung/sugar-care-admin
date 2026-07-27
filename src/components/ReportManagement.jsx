@@ -11,6 +11,18 @@ const TYPE_FILTERS = [
   { value: 'meal', label: '식단 관리' },
 ];
 
+// [데모용] 실제 API 대신 사용하는 mock 신고 데이터
+const MOCK_REPORTS_RAW = [
+  { id: 1, userName: '김민준', reportedAt: '2025-12-14T09:20:00', status: '대기중', reportType: '체중 관리', apiType: 'weight', content: '체중 기록이 실제와 다르게 반영되고 있어요.' },
+  { id: 2, userName: '이서연', reportedAt: '2025-12-13T18:05:00', status: '대기중', reportType: '혈당 관리', apiType: 'blood_sugar', content: '혈당 그래프가 갱신되지 않습니다.' },
+  { id: 3, userName: '박도윤', reportedAt: '2025-12-12T11:40:00', status: '처리완료', reportType: '식단 관리', apiType: 'meal', content: '식단 추천이 알레르기 정보와 맞지 않아요.' },
+  { id: 4, userName: '최지우', reportedAt: '2025-12-11T08:15:00', status: '대기중', reportType: '혈당 관리', apiType: 'blood_sugar', content: '임신성 당뇨 기준값이 다르게 표시돼요.' },
+  { id: 5, userName: '정하은', reportedAt: '2025-12-10T20:30:00', status: '처리완료', reportType: '체중 관리', apiType: 'weight', content: '목표 체중 설정이 저장되지 않습니다.' },
+  { id: 6, userName: '한지호', reportedAt: '2025-12-09T14:50:00', status: '대기중', reportType: '식단 관리', apiType: 'meal', content: '즐겨찾기한 음식이 자꾸 사라져요.' },
+  { id: 7, userName: '오수빈', reportedAt: '2025-12-08T07:10:00', status: '처리완료', reportType: '혈당 관리', apiType: 'blood_sugar', content: '저혈당 알림이 오지 않습니다.' },
+  { id: 8, userName: '강태윤', reportedAt: '2025-12-07T19:25:00', status: '대기중', reportType: '체중 관리', apiType: 'weight', content: '체중 그래프 기간 필터가 작동하지 않아요.' },
+];
+
 export function ReportManagement() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');     
@@ -25,7 +37,10 @@ export function ReportManagement() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await axios.get('/management/reports/stats');
+        // [데모용] 실제 API 대신 mock 데이터 사용
+        const waiting = MOCK_REPORTS_RAW.filter(r => r.status === '대기중').length;
+        const approval = MOCK_REPORTS_RAW.filter(r => r.status === '처리완료').length;
+        const response = { data: { success: true, data: { total: MOCK_REPORTS_RAW.length, waiting, approval } } };
         if (response.data.success) {
           setReportStats(response.data.data);
         }
@@ -41,16 +56,24 @@ export function ReportManagement() {
     const fetchReports = async () => {
       try {
         setLoading(true);
-        const apiStatus = statusFilter === 'pending' ? 'wait' : statusFilter === 'resolved' ? 'completed' : 'all';
-        const apiTime = sortOrder === 'latest' ? 'recent' : 'old';
 
-        const response = await axios.get('/management/reports', {
-          params: {
-            status: apiStatus,
-            type: typeFilter,
-            time: apiTime
-          }
+        // [데모용] 실제 API 대신 mock 데이터를 필터/정렬해서 사용
+        let filtered = [...MOCK_REPORTS_RAW];
+
+        if (statusFilter === 'pending') filtered = filtered.filter(r => r.status === '대기중');
+        else if (statusFilter === 'resolved') filtered = filtered.filter(r => r.status === '처리완료');
+
+        if (typeFilter !== 'all') filtered = filtered.filter(r => r.apiType === typeFilter);
+
+        filtered.sort((a, b) => {
+          const diff = new Date(a.reportedAt) - new Date(b.reportedAt);
+          return sortOrder === 'latest' ? -diff : diff;
         });
+
+        // 약간의 로딩감을 주기 위한 딜레이 (선택 사항)
+        await new Promise(resolve => setTimeout(resolve, 200));
+
+        const response = { data: { success: true, data: filtered } };
 
         if (response.data.success) {
           setReports(response.data.data);
@@ -71,11 +94,8 @@ export function ReportManagement() {
     if (!window.confirm('이 신고를 처리 완료하시겠습니까?')) return;
 
     try {
-      // PATCH /management/reports?id={reportId}
-      // 두 번째 인자(Body)는 null, 세 번째 인자(Config)에 params를 넣음
-      const response = await axios.patch('/management/reports', null, {
-        params: { id: reportId }
-      });
+      // [데모용] 실제 API 대신 로컬 상태만 업데이트
+      const response = { data: { success: true, message: '신고가 처리 완료되었습니다. (데모)' } };
 
       if (response.data.success) {
         // 성공 메시지 알림

@@ -44,7 +44,16 @@ export function AllergyStats() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/management/users/allergy');
+        // [데모용] 실제 API 대신 mock 데이터 사용 (원본 API 응답 형태와 동일한 구조)
+        const MOCK_ALLERGY_USERS = [
+          { allergy: ['우유', '땅콩'], age: 24 }, { allergy: ['갑각류'], age: 31 },
+          { allergy: [], age: 45 }, { allergy: ['계란'], age: 29 },
+          { allergy: ['밀', '콩'], age: 39 }, { allergy: [], age: 52 },
+          { allergy: ['우유'], age: 22 }, { allergy: ['생선'], age: 60 },
+          { allergy: ['땅콩', '갑각류', '계란'], age: 34 }, { allergy: [], age: 27 },
+          { allergy: ['우유', '밀'], age: 48 }, { allergy: ['콩'], age: 33 },
+        ];
+        const response = { data: { success: true, data: MOCK_ALLERGY_USERS } };
         if (response.data.success) {
           processData(response.data.data);
         }
