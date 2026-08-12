@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { Sidebar } from './components/Sidebar';
-import { Header } from './components/Header';
-import { UserList } from './components/UserList';
-import { ServiceStats } from './components/ServiceStats';
-import { AllergyStats } from './components/AllergyStats';
-import { BloodSugarStats } from './components/BloodSugarStats';
-import { PopularFoodStats } from './components/PopularFoodStats';
-import { GoalStats } from './components/GoalStats';
-import { MealPatternStats } from './components/MealPatternStats';
-import { ReportManagement } from './components/ReportManagement';
-import { LoginPage } from './components/LoginPage';
+import { Sidebar } from './components/layout/Sidebar';
+import { Header } from './components/layout/Header';
+import { UserList } from './pages/UserList';
+import { ServiceStats } from './pages/ServiceStats';
+import { AllergyStats } from './pages/AllergyStats';
+import { BloodSugarStats } from './pages/BloodSugarStats';
+import { PopularFoodStats } from './pages/PopularFoodStats';
+import { GoalStats } from './pages/GoalStats';
+import { MealPatternStats } from './pages/MealPatternStats';
+import { ReportManagement } from './pages/ReportManagement';
+import { LoginPage } from './pages/LoginPage';
 
 export default function App() {
   const [currentSection, setCurrentSection] = useState('stats-service');
@@ -19,7 +19,7 @@ export default function App() {
   const handleLogin = (email, password) => {
     console.log('Login attempt:', { email, password });
     setIsLoggedIn(true);
-    setCurrentSection('ServiceStats'); // 로그인 시 화면을 'ServiceStats' 으로 초기화
+    setCurrentSection('stats-service'); // 로그인 시 항상 '서비스 통계'로 초기화 (사이드바 활성 표시와 id 일치시킴)
   };
 
   const handleLogout = () => {
@@ -54,7 +54,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30">
+    <div className="flex h-screen bg-ink-50">
       <Sidebar
         currentSection={currentSection}
         onSectionChange={setCurrentSection}
@@ -62,16 +62,18 @@ export default function App() {
         onClose={() => setIsSidebarOpen(false)}
       />
 
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         <Header
           isLoggedIn={isLoggedIn}
-          onLoginClick={() => {}}
+          onLoginClick={() => { }}
           onLogoutClick={handleLogout}
           onMenuClick={() => setIsSidebarOpen(true)}
         />
 
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
-          {renderContent()}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-5 md:p-6 lg:p-7">
+          <div className="max-w-[1400px] mx-auto">
+            {renderContent()}
+          </div>
         </main>
       </div>
     </div>

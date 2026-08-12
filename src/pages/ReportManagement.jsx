@@ -25,12 +25,12 @@ const MOCK_REPORTS_RAW = [
 
 export function ReportManagement() {
   const [statusFilter, setStatusFilter] = useState('all');
-  const [typeFilter, setTypeFilter] = useState('all');     
-  const [sortOrder, setSortOrder] = useState('latest');    
-  
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [sortOrder, setSortOrder] = useState('latest');
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [reports, setReports] = useState([]); 
-  const [reportStats, setReportStats] = useState({ total: 0, waiting: 0, approval: 0 }); 
+  const [reports, setReports] = useState([]);
+  const [reportStats, setReportStats] = useState({ total: 0, waiting: 0, approval: 0 });
   const [loading, setLoading] = useState(false);
 
   // 통계 API 호출
@@ -102,8 +102,8 @@ export function ReportManagement() {
         alert(response.data.message);
 
         // 리스트 상태 업데이트 (해당 항목을 '처리완료'로 변경)
-        setReports((prevReports) => 
-          prevReports.map((report) => 
+        setReports((prevReports) =>
+          prevReports.map((report) =>
             report.id === reportId ? { ...report, status: '처리완료' } : report
           )
         );
@@ -131,22 +131,23 @@ export function ReportManagement() {
   const currentReports = reports.slice(startIndex, endIndex);
 
   const getStatusBadge = (statusText) => {
+    // 대기중(호박색)과 처리완료(파란색)를 서로 다른 색상 계열로 확실히 구분
     if (statusText === '대기중') {
       return (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium border border-yellow-200">
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-500 text-white rounded-full text-xs font-semibold shadow-sm">
           <Clock className="w-3 h-3" />
           대기중
         </span>
       );
     } else if (statusText === '처리완료') {
       return (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-medium border border-green-200">
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-sky-600 text-white rounded-full text-xs font-semibold shadow-sm">
           <CheckCircle className="w-3 h-3" />
           처리완료
         </span>
       );
     } else {
-      return <span className="text-gray-500 text-xs">{statusText}</span>;
+      return <span className="text-ink-400 text-xs">{statusText}</span>;
     }
   };
 
@@ -155,60 +156,60 @@ export function ReportManagement() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="mb-6 lg:mb-8">
-        <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+    <div className="space-y-5">
+      <div className="mb-5">
+        <h2 className="text-xl lg:text-2xl font-bold text-ink-900 mb-2">
           신고 관리
         </h2>
-        <p className="text-sm lg:text-base text-gray-600">사용자들의 신고 내용을 관리합니다</p>
+        <p className="text-sm lg:text-base text-ink-500">사용자들의 신고 내용을 관리합니다</p>
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 shadow-sm border border-gray-200/50 flex items-center justify-between sm:block">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-4">
+        <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-card border border-ink-100 flex items-center justify-between sm:block">
           <div className="flex items-center gap-3 mb-0 sm:mb-2">
             <div className="p-2 bg-orange-100 rounded-lg">
-                <AlertTriangle className="w-5 h-5 text-orange-600" />
+              <AlertTriangle className="w-5 h-5 text-orange-600" />
             </div>
-            <p className="text-gray-600 font-medium">전체 신고</p>
+            <p className="text-ink-500 font-medium">전체 신고</p>
           </div>
-          <p className="text-2xl font-bold text-gray-900">
+          <p className="text-2xl font-bold text-ink-900">
             {reportStats.total.toLocaleString()}
-            <span className="text-sm font-normal text-gray-500 ml-1">건</span>
+            <span className="text-sm font-normal text-ink-400 ml-1">건</span>
           </p>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 shadow-sm border border-gray-200/50 flex items-center justify-between sm:block">
+        <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-card border border-ink-100 flex items-center justify-between sm:block">
           <div className="flex items-center gap-3 mb-0 sm:mb-2">
-            <div className="p-2 bg-yellow-100 rounded-lg">
-                <Clock className="w-5 h-5 text-yellow-600" />
+            <div className="p-2 bg-amber-100 rounded-lg">
+              <Clock className="w-5 h-5 text-amber-600" />
             </div>
-            <p className="text-gray-600 font-medium">대기중</p>
+            <p className="text-ink-500 font-medium">대기중</p>
           </div>
-          <p className="text-2xl font-bold text-gray-900">
+          <p className="text-2xl font-bold text-ink-900">
             {reportStats.waiting.toLocaleString()}
-            <span className="text-sm font-normal text-gray-500 ml-1">건</span>
+            <span className="text-sm font-normal text-ink-400 ml-1">건</span>
           </p>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 shadow-sm border border-gray-200/50 flex items-center justify-between sm:block">
+        <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-card border border-ink-100 flex items-center justify-between sm:block">
           <div className="flex items-center gap-3 mb-0 sm:mb-2">
-             <div className="p-2 bg-green-100 rounded-lg">
-                <CheckCircle className="w-5 h-5 text-green-600" />
-             </div>
-            <p className="text-gray-600 font-medium">처리완료</p>
+            <div className="p-2 bg-sky-100 rounded-lg">
+              <CheckCircle className="w-5 h-5 text-sky-600" />
+            </div>
+            <p className="text-ink-500 font-medium">처리완료</p>
           </div>
-          <p className="text-2xl font-bold text-gray-900">
+          <p className="text-2xl font-bold text-ink-900">
             {reportStats.approval.toLocaleString()}
-            <span className="text-sm font-normal text-gray-500 ml-1">건</span>
+            <span className="text-sm font-normal text-ink-400 ml-1">건</span>
           </p>
         </div>
       </div>
 
       {/* Filter & Sort Toolbar */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-gray-200/50">
+      <div className="bg-white rounded-2xl p-4 shadow-card border border-ink-100">
         <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-2">
-          
+
           <div className="flex flex-wrap items-center gap-2">
             {[
               { value: 'all', label: '전체 보기' },
@@ -221,22 +222,21 @@ export function ReportManagement() {
                   setStatusFilter(filter.value);
                   setCurrentPage(1);
                 }}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
-                  statusFilter === filter.value
-                    ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-md'
-                    : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-                }`}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${statusFilter === filter.value
+                    ? 'bg-gradient-to-r from-brand-700 to-brand-800 text-white shadow-brand'
+                    : 'bg-white border border-ink-100 text-ink-500 hover:bg-ink-50'
+                  }`}
               >
                 {filter.label}
               </button>
             ))}
           </div>
 
-          <div className="hidden lg:block w-px h-8 bg-gray-300 mx-2"></div>
+          <div className="hidden lg:block w-px h-8 bg-ink-200 mx-2"></div>
 
           <div className="flex flex-wrap items-center gap-2 flex-1">
-            <div className="flex items-center gap-1 mr-1 text-gray-400">
-               <Filter className="w-4 h-4" />
+            <div className="flex items-center gap-1 mr-1 text-ink-400">
+              <Filter className="w-4 h-4" />
             </div>
             {TYPE_FILTERS.map((type) => (
               <button
@@ -245,36 +245,33 @@ export function ReportManagement() {
                   setTypeFilter(type.value);
                   setCurrentPage(1);
                 }}
-                className={`px-3 py-1.5 rounded-lg text-sm transition-all duration-200 border ${
-                  typeFilter === type.value
-                    ? 'bg-blue-50 border-blue-200 text-blue-700 font-medium'
-                    : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
-                }`}
+                className={`px-3 py-1.5 rounded-lg text-sm transition-all duration-200 border ${typeFilter === type.value
+                    ? 'bg-brand-50 border-brand-200 text-brand-700 font-medium'
+                    : 'bg-white border-ink-100 text-ink-500 hover:bg-ink-50'
+                  }`}
               >
                 {type.label}
               </button>
             ))}
           </div>
 
-          <div className="flex bg-gray-100 rounded-lg p-1 self-start lg:self-auto">
+          <div className="flex bg-ink-100 rounded-lg p-1 self-start lg:self-auto">
             <button
               onClick={() => setSortOrder('latest')}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1 ${
-                sortOrder === 'latest'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-900'
-              }`}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1 ${sortOrder === 'latest'
+                  ? 'bg-white text-ink-900 shadow-sm'
+                  : 'text-ink-400 hover:text-ink-900'
+                }`}
             >
               <Calendar className="w-3 h-3" />
               최신순
             </button>
             <button
               onClick={() => setSortOrder('oldest')}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1 ${
-                sortOrder === 'oldest'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-900'
-              }`}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1 ${sortOrder === 'oldest'
+                  ? 'bg-white text-ink-900 shadow-sm'
+                  : 'text-ink-400 hover:text-ink-900'
+                }`}
             >
               <ArrowUpDown className="w-3 h-3" />
               오래된순
@@ -287,50 +284,50 @@ export function ReportManagement() {
       {/* Reports List - Mobile */}
       <div className="lg:hidden space-y-4">
         {loading ? (
-           <div className="text-center py-10 text-gray-500">로딩 중...</div>
+          <div className="text-center py-10 text-ink-400">로딩 중...</div>
         ) : currentReports.length > 0 ? (
           currentReports.map((report) => (
-            <div key={report.id} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+            <div key={report.id} className="bg-white rounded-2xl p-5 shadow-sm border border-ink-100">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
-                      <User className="w-5 h-5" />
+                  <div className="w-10 h-10 rounded-full bg-ink-100 flex items-center justify-center text-ink-400">
+                    <User className="w-5 h-5" />
                   </div>
                   <div>
-                      <h3 className="text-gray-900 font-bold text-sm">{report.userName}</h3>
-                      <div className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
-                          <Calendar className="w-3 h-3" />
-                          {formatDate(report.reportedAt)}
-                      </div>
+                    <h3 className="text-ink-900 font-bold text-sm">{report.userName}</h3>
+                    <div className="flex items-center gap-1 text-xs text-ink-400 mt-0.5">
+                      <Calendar className="w-3 h-3" />
+                      {formatDate(report.reportedAt)}
+                    </div>
                   </div>
                 </div>
                 {getStatusBadge(report.status)}
               </div>
 
               <div className="mb-4">
-                  <div className="flex items-center gap-2 mb-2">
-                      <FileText className="w-4 h-4 text-orange-500" />
-                      <span className="text-sm font-bold text-gray-800">{report.reportType}</span>
-                  </div>
-                  <div className="bg-gray-50 rounded-xl p-3.5 text-sm text-gray-600 leading-relaxed border border-gray-100">
-                      {report.content}
-                  </div>
+                <div className="flex items-center gap-2 mb-2">
+                  <FileText className="w-4 h-4 text-brand-600" />
+                  <span className="text-sm font-bold text-ink-800">{report.reportType}</span>
+                </div>
+                <div className="bg-ink-50 rounded-xl p-3.5 text-sm text-ink-500 leading-relaxed border border-ink-100">
+                  {report.content}
+                </div>
               </div>
 
               {/* status가 '대기중'일 때만 완료 버튼 표시 */}
               {report.status === '대기중' && (
-                  <button
-                    onClick={() => handleComplete(report.id)}
-                    className="w-full py-3 bg-white border border-green-500 text-green-600 font-medium rounded-xl hover:bg-green-50 transition-colors duration-200 flex items-center justify-center gap-2"
-                  >
-                    <CheckCircle className="w-4 h-4" />
-                    처리 완료로 변경
-                  </button>
+                <button
+                  onClick={() => handleComplete(report.id)}
+                  className="w-full py-3 bg-sky-600 text-white font-semibold rounded-xl shadow-sm hover:bg-sky-700 active:scale-[0.99] transition-all duration-150 flex items-center justify-center gap-2"
+                >
+                  <CheckCircle className="w-4 h-4" />
+                  완료 처리하기
+                </button>
               )}
             </div>
           ))
         ) : (
-          <div className="text-center py-10 text-gray-500 bg-white/50 rounded-2xl">
+          <div className="text-center py-10 text-ink-500 bg-white rounded-2xl border border-ink-100">
             해당 조건의 신고 내역이 없습니다.
           </div>
         )}
@@ -339,40 +336,40 @@ export function ReportManagement() {
       {/* Reports List - Desktop */}
       <div className="hidden lg:block space-y-3">
         {loading ? (
-           <div className="text-center py-20 text-gray-500">데이터를 불러오는 중입니다...</div>
+          <div className="text-center py-20 text-ink-400">데이터를 불러오는 중입니다...</div>
         ) : currentReports.length > 0 ? (
           currentReports.map((report) => (
-            <div key={report.id} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200">
-              <div className="flex items-start gap-6">
+            <div key={report.id} className="bg-white rounded-2xl p-5 shadow-sm border border-ink-100 hover:shadow-md transition-shadow duration-200">
+              <div className="flex items-start gap-4">
                 <div className="w-48 flex-shrink-0 space-y-2">
                   <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
-                          <User className="w-4 h-4" />
-                      </div>
-                      <div>
-                          <p className="text-sm font-bold text-gray-900">{report.userName}</p>
-                          <p className="text-xs text-gray-500">{formatDate(report.reportedAt)}</p>
-                      </div>
+                    <div className="w-8 h-8 rounded-full bg-ink-100 flex items-center justify-center text-ink-400">
+                      <User className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-ink-900">{report.userName}</p>
+                      <p className="text-xs text-ink-400">{formatDate(report.reportedAt)}</p>
+                    </div>
                   </div>
-                  <div className="px-2.5 py-1 bg-gray-50 rounded-lg w-fit">
-                      <p className="text-xs font-semibold text-gray-700">{report.reportType}</p>
+                  <div className="px-2.5 py-1 bg-ink-50 rounded-lg w-fit">
+                    <p className="text-xs font-semibold text-ink-700">{report.reportType}</p>
                   </div>
                 </div>
-                
+
                 <div className="flex-1">
-                  <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-600 leading-relaxed border border-gray-100 h-full">
-                      {report.content}
+                  <div className="bg-ink-50 rounded-xl p-4 text-sm text-ink-500 leading-relaxed border border-ink-100 h-full">
+                    {report.content}
                   </div>
                 </div>
-                
+
                 <div className="w-40 flex-shrink-0 flex flex-col items-end gap-3 justify-center">
                   {getStatusBadge(report.status)}
                   {report.status === '대기중' && (
                     <button
                       onClick={() => handleComplete(report.id)}
-                      className="w-full py-2 px-3 bg-green-50 text-green-600 text-sm font-medium rounded-lg hover:bg-green-100 transition-colors border border-green-200"
+                      className="w-full py-2 px-3 bg-sky-600 text-white text-sm font-semibold rounded-lg shadow-sm hover:bg-sky-700 active:scale-[0.99] transition-all duration-150"
                     >
-                      처리완료
+                      완료 처리하기
                     </button>
                   )}
                 </div>
@@ -380,33 +377,33 @@ export function ReportManagement() {
             </div>
           ))
         ) : (
-          <div className="text-center py-20 text-gray-500 bg-white/50 rounded-2xl border border-dashed border-gray-300">
-             조건에 맞는 신고 내역이 없습니다.
+          <div className="text-center py-20 text-ink-500 bg-white rounded-2xl border border-dashed border-ink-200">
+            조건에 맞는 신고 내역이 없습니다.
           </div>
         )}
       </div>
 
       {/* Pagination */}
       {totalPages > 0 && (
-        <div className="flex items-center justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-gray-200/50">
-          <div className="text-sm text-gray-500">
+        <div className="flex items-center justify-between bg-white rounded-2xl p-4 shadow-card border border-ink-100">
+          <div className="text-sm text-ink-400">
             총 {reports.length}건 중 {startIndex + 1}-{Math.min(endIndex, reports.length)}
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
               disabled={currentPage === 1}
-              className="p-2 hover:bg-gray-100 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed text-gray-600 transition-colors"
+              className="p-2 hover:bg-ink-100 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed text-ink-500 transition-colors"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <span className="text-sm font-medium text-gray-700 px-2">
+            <span className="text-sm font-medium text-ink-700 px-2">
               {currentPage} / {totalPages}
             </span>
             <button
               onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
               disabled={currentPage === totalPages}
-              className="p-2 hover:bg-gray-100 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed text-gray-600 transition-colors"
+              className="p-2 hover:bg-ink-100 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed text-ink-500 transition-colors"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
