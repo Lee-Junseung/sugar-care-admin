@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Users, Utensils, Flame } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import { AXIS_TEXT_COLOR, AXIS_TEXT_COLOR_LIGHT, BRAND_COLOR, GRID_LINE_COLOR, SEMANTIC_COLORS, TOOLTIP_CURSOR } from '../constants/chartTheme';
@@ -18,6 +17,7 @@ const mealRecordsData = [
 export function ServiceStats() {
   const [statsData, setStatsData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,15 +26,24 @@ export function ServiceStats() {
         const response = { data: { success: true, data: { type1: 128, type2: 342, gestational: 46, before: 189 } } };
         if (response.data.success) {
           setStatsData(response.data.data);
+        } else {
+          setErrorMsg(`서버 응답 내용이 예상과 다릅니다: ${JSON.stringify(response.data)}`);
         }
       } catch (error) {
-        console.error("데이터 로딩 실패:", error);
+        setErrorMsg(`에러 발생: ${error.message}`);
       } finally {
         setLoading(false);
       }
     };
     fetchData();
   }, []);
+
+  if (!loading && !statsData) return (
+    <div className="p-10 text-center text-red-500 border border-red-200 bg-red-50 rounded-lg overflow-auto">
+      <h3 className="font-bold mb-2">데이터를 불러오지 못했습니다.</h3>
+      <p className="font-mono text-sm break-all">{errorMsg}</p>
+    </div>
+  );
 
   const safeStats = statsData || { type1: 0, type2: 0, gestational: 0, before: 0 };
 

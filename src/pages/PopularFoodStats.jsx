@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { TrendingUp, Star, Utensils, Sparkles } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { AXIS_TEXT_COLOR, BRAND_COLOR, GRID_LINE_COLOR, TOOLTIP_CURSOR } from '../constants/chartTheme';
@@ -28,6 +27,7 @@ export function PopularFoodStats() {
   const [activeType, setActiveType] = useState('type1');
   const [statsData, setStatsData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -129,8 +129,7 @@ export function PopularFoodStats() {
         setStatsData(processedData);
 
       } catch (error) {
-        // 에러 발생 시에만 최소한의 로그 남김 (사용자 선택에 따라 삭제 가능)
-        console.error("데이터 로딩 실패:", error);
+        setErrorMsg(`에러 발생: ${error.message}`);
       } finally {
         setLoading(false);
       }
@@ -140,7 +139,12 @@ export function PopularFoodStats() {
   }, []);
 
   if (loading) return <div className="p-10 text-center">데이터 분석 중...</div>;
-  if (!statsData) return <div className="p-10 text-center text-red-500">데이터를 불러오지 못했습니다.</div>;
+  if (!statsData) return (
+    <div className="p-10 text-center text-red-500 border border-red-200 bg-red-50 rounded-lg overflow-auto">
+      <h3 className="font-bold mb-2">데이터를 불러오지 못했습니다.</h3>
+      <p className="font-mono text-sm break-all">{errorMsg}</p>
+    </div>
+  );
 
   const currentData = statsData[activeType] || createEmptyData();
 
@@ -169,8 +173,8 @@ export function PopularFoodStats() {
                 onClick={() => setActiveType(type.id)}
 
                 className={`flex-1 min-w-fit md:min-w-[100px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 whitespace-nowrap ${activeType === type.id
-                    ? 'bg-gradient-to-r from-brand-700 to-brand-800 text-white shadow-brand scale-[1.02]'
-                    : 'bg-white hover:bg-ink-50 text-ink-500 border border-transparent hover:border-ink-100'
+                  ? 'bg-gradient-to-r from-brand-700 to-brand-800 text-white shadow-brand scale-[1.02]'
+                  : 'bg-white hover:bg-ink-50 text-ink-500 border border-transparent hover:border-ink-100'
                   }`}
               >
                 <span className="whitespace-nowrap">{type.label}</span>
@@ -267,9 +271,9 @@ export function PopularFoodStats() {
             currentData.favorites.map((food, index) => (
               <div key={index} className="flex items-center gap-3">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${index === 0 ? 'bg-amber-500' :
-                    index === 1 ? 'bg-ink-300' :
-                      index === 2 ? 'bg-orange-400' :
-                        'bg-ink-100'
+                  index === 1 ? 'bg-ink-300' :
+                    index === 2 ? 'bg-orange-400' :
+                      'bg-ink-100'
                   } text-white`}>
                   {index + 1}
                 </div>

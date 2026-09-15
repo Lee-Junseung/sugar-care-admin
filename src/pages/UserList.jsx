@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Search, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Mail, Heart, Apple, Activity } from 'lucide-react';
 
 const ITEMS_PER_PAGE = 8;
@@ -20,6 +19,7 @@ export function UserList() {
   // 상태 관리 (데이터, 로딩, 검색, 페이지네이션)
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedUserId, setExpandedUserId] = useState(null);
@@ -54,9 +54,11 @@ export function UserList() {
           }));
 
           setUsers(mappedUsers);
+        } else {
+          setErrorMsg(`서버 응답 내용이 예상과 다릅니다: ${JSON.stringify(response.data)}`);
         }
       } catch (error) {
-        console.error("사용자 목록 로딩 실패:", error);
+        setErrorMsg(`에러 발생: ${error.message}`);
       } finally {
         setLoading(false);
       }
@@ -87,6 +89,13 @@ export function UserList() {
   };
 
   if (loading) return <div className="p-10 text-center">사용자 목록을 불러오는 중...</div>;
+
+  if (errorMsg) return (
+    <div className="p-10 text-center text-red-500 border border-red-200 bg-red-50 rounded-lg overflow-auto">
+      <h3 className="font-bold mb-2">데이터를 불러오지 못했습니다.</h3>
+      <p className="font-mono text-sm break-all">{errorMsg}</p>
+    </div>
+  );
 
   return (
     <div className="space-y-5">

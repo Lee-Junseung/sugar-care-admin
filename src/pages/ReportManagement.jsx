@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { AlertTriangle, CheckCircle, Clock, ChevronLeft, ChevronRight, User, Calendar, FileText, ArrowUpDown, Filter } from 'lucide-react';
 
 const ITEMS_PER_PAGE = 5;
@@ -32,6 +31,7 @@ export function ReportManagement() {
   const [reports, setReports] = useState([]);
   const [reportStats, setReportStats] = useState({ total: 0, waiting: 0, approval: 0 });
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   // 통계 API 호출
   useEffect(() => {
@@ -43,9 +43,11 @@ export function ReportManagement() {
         const response = { data: { success: true, data: { total: MOCK_REPORTS_RAW.length, waiting, approval } } };
         if (response.data.success) {
           setReportStats(response.data.data);
+        } else {
+          setErrorMsg(`서버 응답 내용이 예상과 다릅니다: ${JSON.stringify(response.data)}`);
         }
       } catch (error) {
-        console.error("신고 통계 로딩 실패:", error);
+        setErrorMsg(`에러 발생: ${error.message}`);
       }
     };
     fetchStats();
@@ -77,9 +79,11 @@ export function ReportManagement() {
 
         if (response.data.success) {
           setReports(response.data.data);
+        } else {
+          setErrorMsg(`서버 응답 내용이 예상과 다릅니다: ${JSON.stringify(response.data)}`);
         }
       } catch (error) {
-        console.error("신고 목록 로딩 실패:", error);
+        setErrorMsg(`에러 발생: ${error.message}`);
       } finally {
         setLoading(false);
       }
@@ -141,7 +145,7 @@ export function ReportManagement() {
       );
     } else if (statusText === '처리완료') {
       return (
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-sky-600 text-white rounded-full text-xs font-semibold shadow-sm">
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-brand-700 text-white rounded-full text-xs font-semibold shadow-sm">
           <CheckCircle className="w-3 h-3" />
           처리완료
         </span>
@@ -155,13 +159,20 @@ export function ReportManagement() {
     return dateString ? dateString.replace('T', ' ').slice(0, 16) : '-';
   };
 
+  if (!loading && errorMsg) return (
+    <div className="p-10 text-center text-red-500 border border-red-200 bg-red-50 rounded-lg overflow-auto">
+      <h3 className="font-bold mb-2">데이터를 불러오지 못했습니다.</h3>
+      <p className="font-mono text-sm break-all">{errorMsg}</p>
+    </div>
+  );
+
   return (
     <div className="space-y-5">
       <div className="mb-5">
-        <h2 className="text-xl lg:text-2xl font-bold text-ink-900 mb-2">
+        <h2 className="text-ink-900 mb-2">
           신고 관리
         </h2>
-        <p className="text-sm lg:text-base text-ink-500">사용자들의 신고 내용을 관리합니다</p>
+        <p className="text-ink-500">사용자들의 신고 내용을 관리합니다</p>
       </div>
 
       {/* Summary Stats */}
@@ -194,8 +205,8 @@ export function ReportManagement() {
 
         <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-card border border-ink-100 flex items-center justify-between sm:block">
           <div className="flex items-center gap-3 mb-0 sm:mb-2">
-            <div className="p-2 bg-sky-100 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-sky-600" />
+            <div className="p-2 bg-brand-50 rounded-lg">
+              <CheckCircle className="w-5 h-5 text-brand-700" />
             </div>
             <p className="text-ink-500 font-medium">처리완료</p>
           </div>
@@ -223,8 +234,8 @@ export function ReportManagement() {
                   setCurrentPage(1);
                 }}
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${statusFilter === filter.value
-                    ? 'bg-gradient-to-r from-brand-700 to-brand-800 text-white shadow-brand'
-                    : 'bg-white border border-ink-100 text-ink-500 hover:bg-ink-50'
+                  ? 'bg-gradient-to-r from-brand-700 to-brand-800 text-white shadow-brand'
+                  : 'bg-white border border-ink-100 text-ink-500 hover:bg-ink-50'
                   }`}
               >
                 {filter.label}
@@ -246,8 +257,8 @@ export function ReportManagement() {
                   setCurrentPage(1);
                 }}
                 className={`px-3 py-1.5 rounded-lg text-sm transition-all duration-200 border ${typeFilter === type.value
-                    ? 'bg-brand-50 border-brand-200 text-brand-700 font-medium'
-                    : 'bg-white border-ink-100 text-ink-500 hover:bg-ink-50'
+                  ? 'bg-brand-50 border-brand-200 text-brand-700 font-medium'
+                  : 'bg-white border-ink-100 text-ink-500 hover:bg-ink-50'
                   }`}
               >
                 {type.label}
@@ -259,8 +270,8 @@ export function ReportManagement() {
             <button
               onClick={() => setSortOrder('latest')}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1 ${sortOrder === 'latest'
-                  ? 'bg-white text-ink-900 shadow-sm'
-                  : 'text-ink-400 hover:text-ink-900'
+                ? 'bg-white text-ink-900 shadow-sm'
+                : 'text-ink-400 hover:text-ink-900'
                 }`}
             >
               <Calendar className="w-3 h-3" />
@@ -269,8 +280,8 @@ export function ReportManagement() {
             <button
               onClick={() => setSortOrder('oldest')}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1 ${sortOrder === 'oldest'
-                  ? 'bg-white text-ink-900 shadow-sm'
-                  : 'text-ink-400 hover:text-ink-900'
+                ? 'bg-white text-ink-900 shadow-sm'
+                : 'text-ink-400 hover:text-ink-900'
                 }`}
             >
               <ArrowUpDown className="w-3 h-3" />
@@ -318,7 +329,7 @@ export function ReportManagement() {
               {report.status === '대기중' && (
                 <button
                   onClick={() => handleComplete(report.id)}
-                  className="w-full py-3 bg-sky-600 text-white font-semibold rounded-xl shadow-sm hover:bg-sky-700 active:scale-[0.99] transition-all duration-150 flex items-center justify-center gap-2"
+                  className="w-full py-3 bg-brand-700 text-white font-semibold rounded-xl shadow-sm hover:bg-brand-800 active:scale-[0.99] transition-all duration-150 flex items-center justify-center gap-2"
                 >
                   <CheckCircle className="w-4 h-4" />
                   완료 처리하기
@@ -367,7 +378,7 @@ export function ReportManagement() {
                   {report.status === '대기중' && (
                     <button
                       onClick={() => handleComplete(report.id)}
-                      className="w-full py-2 px-3 bg-sky-600 text-white text-sm font-semibold rounded-lg shadow-sm hover:bg-sky-700 active:scale-[0.99] transition-all duration-150"
+                      className="w-full py-2 px-3 bg-brand-700 text-white text-sm font-semibold rounded-lg shadow-sm hover:bg-brand-800 active:scale-[0.99] transition-all duration-150"
                     >
                       완료 처리하기
                     </button>
