@@ -2,15 +2,39 @@
 
 > [`sugar-care-admin`](https://github.com/Lee-Junseung/sugar-care-admin)의 데모 브랜치.
 > 실제 서비스(main 브랜치)는 팀 프로젝트 종료 후 백엔드 서버가 종료되어 더 이상 API 연동 화면을 확인할 수 없음.
-> 이 브랜치는 동일한 화면 구성과 로직을 mock(가상) 데이터로 재현해, 백엔드 서버 없이도 로컬에서 바로 실행하고 클릭해볼 수 있도록 만듦.
+> 이 브랜치는 동일한 화면 구성과 로직을 mock(가상) 데이터로 재현해, 백엔드 서버 없이도 바로 클릭해볼 수 있도록 만듦.
 
 > 실제 프로젝트 개요, 기술 스택, 담당 역할 등 상세 설명은 [`main` 브랜치 README](https://github.com/Lee-Junseung/sugar-care-admin/blob/main/README.md)를 참고. 이 문서는 데모 버전 사용법 위주로 정리함.
+
+**[배포된 데모 바로 보기 →](https://sugar-care-admin.vercel.app)**
+
+---
+
+## 스크린샷
+
+main 브랜치 스크린샷과 화면 구성·기능은 동일하지만, 색상·폰트 등 디자인은 아래 "디자인 변경"에 정리한 것처럼 이 브랜치에서 새로 작업해 실제로는 다르게 보임.
+
+![로그인 화면](./docs/images/login-demo.png)
+
+![서비스 통계](./docs/images/dashboard-service-stats-demo.png)
+
+![알레르기 관리](./docs/images/dashboard-allergy-stats-demo.png)
+
+![혈당 관리](./docs/images/dashboard-blood-sugar-stats-demo.png)
+
+![인기 음식](./docs/images/dashboard-popular-food-stats-demo.png)
+
+![식사 패턴](./docs/images/dashboard-meal-pattern-stats-demo.png)
+
+![사용자 리스트](./docs/images/user-management-user-list-demo.png)
+
+![신고 관리](./docs/images/user-management-report-demo.png)
 
 ---
 
 ## 이 브랜치가 원본과 다른 점
 
-원본 코드의 UI, 레이아웃, 데이터 가공 로직은 기본적으로 유지하되, 각 컴포넌트에서 `axios`로 실제 백엔드 API를 호출하던 부분을 같은 응답 형태를 가진 mock 데이터로 교체함. 이 외에 포트폴리오 정리 과정에서 발견한 일부 세부 사항도 함께 개선함(아래 "추가 개선사항" 참고).
+각 컴포넌트에서 `axios`로 실제 백엔드 API를 호출하던 부분을 같은 응답 형태를 가진 mock 데이터로 교체함. 이와 별개로, 포트폴리오 정리 과정에서 색상·타이포그래피 등 디자인 전반을 새로 다듬었고(아래 "디자인 변경" 참고), 발견한 일부 세부 사항도 함께 개선함(아래 "추가 개선사항" 참고).
 
 | 파일 | 교체 내용 |
 |---|---|
@@ -22,7 +46,11 @@
 | `ReportManagement.jsx` | 신고 8건 mock 데이터 — 필터·정렬·처리완료 버튼까지 클라이언트 로직으로 동일하게 동작 |
 | `MealPatternStats.jsx`, `GoalStats.jsx` | 원본부터 API 호출이 없어 변경 없음 |
 
-즉, 화면에서 보이는 동작과 사용자 경험은 실제 서비스와 대부분 동일하며, 데이터는 고정된 mock 값으로 채워져 있음.
+즉, 화면 구성과 기능·사용자 흐름은 실제 서비스와 동일하며, 데이터는 고정된 mock 값으로 채워져 있음.
+
+### 디자인 변경
+
+기존 화면은 기본 Tailwind 색상(파랑/보라/분홍 그라데이션)만 사용했는데, 이 브랜치에서는 서비스 로고 색상에서 뽑은 `brand` 팔레트와 중립 톤 `ink` 스케일, Pretendard 폰트 기반의 타이포그래피 스케일을 새로 만들어 전체 화면에 일관되게 적용함. 기능이나 레이아웃 구조는 그대로 두고, 시각적인 톤앤매너만 다시 작업한 것.
 
 ### 추가 개선사항 (mock 데이터 교체 외)
 
